@@ -157,7 +157,7 @@ rice_eddy_data = pd.read_csv('AMF_US-HRA_BASE_HH_3-5.csv',skiprows=2,
                              parse_dates=['TIMESTAMP_START','TIMESTAMP_END'],na_values=-9999)
 
 # the column 'LE' has latent heat flux data. How can you convert this to ET in mm?
-conversion_factor=30*60/2257/1000 # change this to some value that makes sense!
+conversion_factor=1234 # change this to some value that makes sense!
 rice_eddy_data['ET'] = rice_eddy_data.LE*conversion_factor
 rice_eddy_ET = rice_eddy_data[['TIMESTAMP_START','ET']]
 

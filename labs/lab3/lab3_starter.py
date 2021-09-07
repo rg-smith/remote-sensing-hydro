@@ -149,21 +149,22 @@ mod16_df = ee_imgcoll_to_df(mod16_image_collection,34.5852, -91.7517)
 print(mod16_df)
 
 plt.figure();
-plt.plot(mod16_df['datetime'],mod16_df['ET']*7/10/8) #daily ET, mm
-plt.plot(mod16_df['datetime'],mod16_df['PET']*7/10/8) # daily ET, mm
+plt.plot(mod16_df['datetime'],mod16_df['ET']/10/8) #daily ET, mm
+plt.plot(mod16_df['datetime'],mod16_df['PET']/10/8) # daily ET, mm
 plt.legend(['ET','PET'])
 
 rice_eddy_data = pd.read_csv('AMF_US-HRA_BASE_HH_3-5.csv',skiprows=2,
                              parse_dates=['TIMESTAMP_START','TIMESTAMP_END'],na_values=-9999)
 
-# the column 'LE' has latent heat flux data. How can you convert this to ET in mm?
+# the column 'LE' has latent heat flux data. How can you convert this to daily ET in mm?
 conversion_factor=1234 # change this to some value that makes sense!
 rice_eddy_data['ET'] = rice_eddy_data.LE*conversion_factor
 rice_eddy_ET = rice_eddy_data[['TIMESTAMP_START','ET']]
+rice_eddy_ET = rice_eddy_ET.dropna()
 
 rice_eddy_ET = rice_eddy_ET.set_index('TIMESTAMP_START')
 
-rice_eddy_daily = rice_eddy_ET.resample('W').sum()
+rice_eddy_daily = rice_eddy_ET.resample('W').mean()
 
 plt.plot(rice_eddy_daily)
 
